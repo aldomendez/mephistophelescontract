@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Piezas por turno.</title>
+</head>
+<body>
+  <div id="container"></div>
+  <script src="../jsLib/jquery/2.1.3/jquery.min.js"></script>
+  <script src="../jslib/underscore/1.7.0/underscore-min.js"></script>
+  <script src="highChart/js/highcharts.js"></script>
+  <script>
+  $(function () {
+
+    req = $.getJSON('bonders.php/piezas');
+
+    req.done(function (data){
+      // console.table(data);
+      window.data = data;
+
+      pad = function(data){
+        return data < 10 ? '0' + data : '' + data
+      }
+      time = new Date();
+      // time = new Date(time.getFullYear(),time.getMonth(),time.getDate(),14,59);
+      hr = time.getHours() + pad(time.getMinutes());
+      normalizedTarget = function(start,end,inc){
+        return Math.round(((end - start)/1000/60/60) * inc);
+      }
+      createSOD = function(dayOffset,h,m){
+        // Crea la base de hora para la que se estara haciendo la verificacion.
+        return new Date(time.getFullYear(),time.getMonth(),time.getDate() + dayOffset,h,m)
+      }
+      target = function (numberOfMachines){
+        if(hr > 630 && hr < 1500){
+          sod= createSOD(0,6,30);
+          return normalizedTarget(sod, time, numberOfMachines * 11)
+        } else if(hr>1500 && hr<2300){
+          sod= createSOD(0,15,00)
+          return normalizedTarget(sod, time, numberOfMachines * 11)
+        } else if (hr>2300){
+          sod= createSOD(0,23,00)
+          return normalizedTarget(sod, time, numberOfMachines * 11)
+        } else if (hr < 630){
+          sod= createSOD(-1,23,00)
+          return normalizedTarget(sod, time, numberOfMachines * 11)
+        }
+      }
+
+      categories = ['1er Turno','2do Turno','3er Turno']
+      series = []
+      timeTargets = _.map([8.5,8,7.5], function(time){return time * .8});
+      numberOfMachines = _.values(data[1]);
+      series.push({
+        colorByPoint:true,
+        name: 'Piezas por turno',
+        dataLabels:{
+          style:{
+            fontSize:'22px'
+          }
+        },
+        colors:_.map(_.values(data[0]),function(actualVal, index){
+          if(target(4) < actualVal){
+            return 'green'
+          } else {
+            return 'red'
+          }
+        }),
+        data: _.map(_.values(data[0]),function(el){return +el})
+      });
+      // series.push({
+      //   name:"Meta actual",
+      //   type:'spline',
+      //   dataLabels:{
+      //     enabled:true,
+      //     padding:10,
+      //     align:'left',
+      //     format:'{y} pzs',
+      //     style:{
+      //       fontSize:'22px'
+      //     }
+      //   },
+      //   data:_.map(numberOfMachines,function(numberOfMachines, index){
+      //     return target(numberOfMachines[index])
+      //   })
+      // });
+
+      series.push({
+        name:"Meta de Turno",
+        type:'spline',
+        dataLabels:{
+          enabled:true,
+          padding:10,
+          align:'left',
+          format:'{y} pzs',
+          style:{
+            fontSize:'22px'
+          }
+        },
+        data:_.map(numberOfMachines,function(numberOfMachines, index){
+          if( numberOfMachines == 0 ){numberOfMachines = null}
+            // Numero de maquinas * tiempo que dura el turno * numero piezas por hora
+            // return Math.round((numberOfMachines||5) * timeTargets[index] * 9)
+            return Math.round(timeTargets[index]*4*11)
+        })
+      })
+
+
+      window.series = series
+      console.log( series);
+      window.data = data;
+      $('#container').highcharts({
+          chart: {
+              type: 'column',
+              height: 1000,
+              style:{
+                fontSize:'34px'
+              }
+          },
+          legend:{
+            itemStyle:{
+              fontSize:'25px'
+            }
+          },
+          title: {
+              text: 'Piezas de welder (162x) vs Meta',
+              style:{
+                fontSize:'39px'
+              }
+          },
+          label:{
+            style:{
+              fontSize:'39px',
+              fontWeight:'bold'
+            }
+          },
+          xAxis: {
+              categories: categories,
+              labels:{
+                style:{
+                  fontSize:'20px'
+                }
+              }
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: 'Numero de piezas'
+              },
+              labels:{
+                format:'{value} pzs',
+                style:{
+                  fontSize:'20px'
+                }
+              }/*,
+              plotBands:[{
+                from:0,
+                to:280,
+                color:'rgba(68,170,213,0.1)',
+                label:{
+                  text:"Meta con 4 maquinas",
+                  style:{
+                    color:"#606060"
+                  }
+                }
+              },{
+                from:350,
+                to:792,
+                color:'rgba(0,0,0,0.1)',
+                label:{
+                  text:"Meta con 5 maquinas",
+                  style:{
+                    color:"#606060"
+                  }
+                }
+              }]*/
+          },
+          tooltip: {
+              pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+              shared: true
+          },
+          plotOptions: {
+              column: {
+                  dataLabels: {
+                    enabled: true,
+                    // color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 0px black'
+                      },
+                      plotBands:[{
+                        from:0,
+                        to:408
+                      }]
+                  }
+              }
+          },
+          series: series
+      });
+
+    });
+});
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Utilizacion Welder</title>
+</head>
+<body>
+  <div id="container"></div>
+  <script src="../jsLib/jquery/2.1.3/jquery.min.js"></script>
+  <script src="../jslib/underscore/1.7.0/underscore-min.js"></script>
+  <script src="highChart/js/highcharts.js"></script>
+  <script>
+  $(function () {
+
+    req = $.getJSON('bonders.php/equipments');
+
+    req.done(function (data){
+      // console.table(data);
+      window.data = data;
+
+      categories = _.keys(_.groupBy(data,'WELDER_ID'))
+
+                         //     --- Estos son los datos que nos dio el server
+                         //     V
+     series = _.map(['SFT1','SFT2','SFT3'], function (shift, index) {
+        
+        dt = _.map(categories, function(welder){
+          return + _.find(data,function(el){return el.WELDER_ID == welder})[shift]
+        });
+
+         return {
+             name: shift,
+             data: dt
+         }
+     })
+
+      window.series = series
+      console.log( series);
+      window.data = data;
+      $('#container').highcharts({
+          chart: {
+              type: 'column'
+          },
+          title: {
+              text: 'Utilizacion En Welder Por Equipo'
+          },
+          xAxis: {
+              categories: categories
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: 'Utilizacion por maquina (min)'
+              },
+              plotBands:[{
+                from:0,
+                to:408,
+                color:'rgba(68,170,213,0.1)',
+                label:{
+                  text:"Primer turno",
+                  style:{
+                    color:"#606060"
+                  }
+                }
+              },{
+                from:408,
+                to:792,
+                color:'rgba(0,0,0,0.1)',
+                label:{
+                  text:"Segundo turno",
+                  style:{
+                    color:"#606060"
+                  }
+                }
+              },{
+                from:792,
+                to:1152,
+                color:'rgba(68, 170, 213, 0.1)',
+                label:{
+                  text:"Tercer turno",
+                  style:{
+                    color:"#606060"
+                  }
+                }
+              }]
+          },
+          tooltip: {
+              pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+              shared: true
+          },
+          plotOptions: {
+              column: {
+                  stacking: 'normal',
+                  dataLabels: {
+                    enabled: true,
+                    // color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black'
+                      }
+                    }
+              }
+          },
+          series: series
+      });
+
+    });
+});
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Piezas por turno.</title>
+  <link rel="stylesheet" href="../jslib/chartist/0.9.0/chartist.min.css">
+</head>
+<body>
+  <div class="ct-chart ct-minor-seventh"></div>
+  <script src="../jsLib/jquery/2.1.3/jquery.min.js"></script>
+  <script src="../jslib/underscore/1.7.0/underscore-min.js"></script>
+  <script src="../jslib/chartist/0.9.0/chartist.min.js"></script>
+  <script>
+var data = {
+  labels:['Mon','Tue','Wed','Thu','Fri'],
+  series:[[5,2,4,2,0],[3,5,1,5,3]]
+}
+var options = {
+  showPoint:false,
+  lineSmooth:false,
+  axisX:{
+    showGrid:false,
+    showLabel:false
+  },
+  axisY:{
+    offset:60,
+    labelInterpolationFnc: function(value){
+      return '$' + value + 'm';
+    }
+  }
+}
+new Chartist.Line('.ct-chart', data, options);
+  </script>
+
+</body>
+</html>
