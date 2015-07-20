@@ -12,12 +12,26 @@ describe('helper methods', function(){
 	});
 });
 
-describe('Global properties', function(){
-	it('HR should exists and return a function', function(){
-		time = new Date(1437428950496)
-		expect(typeof hr).toBe('function');
+describe('generateTimeinHHMI ', function(){
+	it('is s closure', function(){
+		expect(typeof generateTimeinHHMI).toBe('function');
+		var hr = generateTimeinHHMI()
+		expect(typeof hr).toBe('function')
 	});
-	it('should return a string when called', function(){
-		expect(hr()).toBe('1650')
+	it('closure should return a string when called', function(){
+		hr = generateTimeinHHMI(1437428950496)
+		expect(hr()).toBe('1649')
+		expect(typeof hr()).toBe('string')
+		
 	})
+	it('should accept a UNIX timestamp as a first parameter', function(){
+		var time = new Date(1437428950496)
+		hr = generateTimeinHHMI(time)
+		expect(hr()).toBe('1649')
+		expect(typeof hr()).toBe('string')
+	})
+});
+
+describe('normalizedTarget', function(){
+	
 });

@@ -7,13 +7,19 @@
   }
   var time = new Date();
   // time = new Date(time.getFullYear(),time.getMonth(),time.getDate(),14,59);
-  var hr = function(){
-    var time = new Date() 
+  var generateTimeinHHMI = function(precomputed){
+    var time;
+    if( precomputed == null){
+      time = new Date();
+    } else {
+      time = new Date(precomputed);
+    }
     return function(){
       return time.getHours() + pad(time.getMinutes())
     } // regresa la hora en formato HHMI
   }
-  normalizedTarget = function(start,end,inc){
+  hr = generateTimeinHHMI()
+  var normalizedTarget = function(start,end,inc){
     return Math.round(((end - start)/1000/60/60) * inc);
   }
   createSOD = function(dayOffset,h,m){
@@ -21,16 +27,16 @@
     return new Date(time.getFullYear(),time.getMonth(),time.getDate() + dayOffset,h,m)
   }
   target = function (numberOfMachines){
-    if(hr > 630 && hr < 1500){
+    if(hr() > 630 && hr() < 1500){
       sod= createSOD(0,6,30);
       return normalizedTarget(sod, time, numberOfMachines * 11)
-    } else if(hr>1500 && hr<2300){
+    } else if(hr()>1500 && hr()<2300){
       sod= createSOD(0,15,0)
       return normalizedTarget(sod, time, numberOfMachines * 11)
-    } else if (hr>2300){
+    } else if (hr()>2300){
       sod= createSOD(0,23,0)
       return normalizedTarget(sod, time, numberOfMachines * 11)
-    } else if (hr < 630){
+    } else if (hr() < 630){
       sod= createSOD(-1,23,0)
       return normalizedTarget(sod, time, numberOfMachines * 11)
     }
