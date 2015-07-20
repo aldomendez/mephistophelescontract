@@ -19,8 +19,9 @@ describe('generateTimeinHHMI ', function(){
 		expect(typeof hr).toBe('function')
 	});
 	it('closure should return a string when called', function(){
-		hr = generateTimeinHHMI(1437428950496)
+		hr = generateTimeinHHMI(new Date(1437428950496))
 		expect(hr()).toBe('1649')
+		expect(hr()).toMatch(/\d{3,4}/)
 		expect(typeof hr()).toBe('string')
 		
 	})
@@ -33,5 +34,5 @@ describe('generateTimeinHHMI ', function(){
 });
 
 describe('normalizedTarget', function(){
-	
+	it('should')
 });

@@ -7,22 +7,17 @@
   }
   var time = new Date();
   // time = new Date(time.getFullYear(),time.getMonth(),time.getDate(),14,59);
-  var generateTimeinHHMI = function(precomputed){
-    var time;
-    if( precomputed == null){
-      time = new Date();
-    } else {
-      time = new Date(precomputed);
-    }
+  var generateTimeinHHMI = function(time){
     return function(){
       return time.getHours() + pad(time.getMinutes())
     } // regresa la hora en formato HHMI
   }
-  hr = generateTimeinHHMI()
+  hr = generateTimeinHHMI(new Date())
   var normalizedTarget = function(start,end,inc){
     return Math.round(((end - start)/1000/60/60) * inc);
   }
   createSOD = function(dayOffset,h,m){
+    // SOD = start of day;
     // Crea la base de hora para la que se estara haciendo la verificacion.
     return new Date(time.getFullYear(),time.getMonth(),time.getDate() + dayOffset,h,m)
   }
