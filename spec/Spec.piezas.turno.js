@@ -45,7 +45,11 @@ describe('normalizedTarget', function(){
 		var end = new Date(2015,7,20,18,8,25);
 		expect( typeof normalizedTarget(start, end, 11) ).toBe('number')
 	})
-	it('should correctly calculates target of devices')
+	xit('should correctly calculates target of devices', function(){
+		var start = new Date(2015,7,20,15,0,0);
+		var end = new Date(2015,7,20,18,8,25);
+		expect( normalizedTarget(start, end, 4*11) ).toBe(0)
+	})
 });
 
 describe('createSOD', function(){
@@ -54,19 +58,32 @@ describe('createSOD', function(){
 	})
 	it('should calculate dates correctly', function(){
 		date = createSOD(new Date(), 0, 6,30)
-		expect( date.getHours() ).toBe(6)
-		expect( date.getMinutes() ).toBe(30)
+		expect( date.getHours() ).toEqual(6)
+		expect( date.getMinutes() ).toEqual(30)
 		
-		date = createSOD(new Date(2015,7,20), -1, 6,30)
-		expect( date.getDate() ).toBe(19)
-		expect( date.getHours() ).toBe(6)
-		expect( date.getMinutes() ).toBe(30)
+		date = createSOD(new Date(2015,7,20), -1, 15,0)
+		expect( date.getDate() ).toEqual(19)
+		expect( date.getHours() ).toEqual(15)
+		expect( date.getMinutes() ).toEqual(0)
 		
 		date = createSOD(new Date(2015,4,7), 0, 6,30)
-		expect( date.getFullYear() ).toBe(2015)
-		expect( date.getMonth() ).toBe(4)
-		expect( date.getDate() ).toBe(7)
-		expect( date.getHours() ).toBe(6)
-		expect( date.getMinutes() ).toBe(30)
+		expect( date.getFullYear() ).toEqual(2015)
+		expect( date.getMonth() ).toEqual(4)
+		expect( date.getDate() ).toEqual(7)
+		expect( date.getHours() ).toEqual(6)
+		expect( date.getMinutes() ).toEqual(30)
+	})
+})
+
+describe('target', function(){
+	it('should be a function', function(){
+		expect( typeof target).toBe('function')
+	})
+	it('should take the number of machines in consideration to calculate a target', function(){
+		expect(typeof target(4,new Date(2015,7,20,6,45))).toBe('number')
+		expect(target(4, new Date(2015,7,20,6,45))).toBe('number')
+	})
+	it('should recognize the shift to calculate the target', function(){
+		expect(target(4, new Date(2015,7,20,6,45))).toBe('number')
 	})
 })

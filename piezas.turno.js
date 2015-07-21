@@ -11,8 +11,9 @@
     if(time == null){
       throw new Error('You should pass a Date object for this to work')
     }
+    var ans = time.getHours() + pad(time.getMinutes()) 
     return function(){
-      return time.getHours() + pad(time.getMinutes())
+      return ans
     } // regresa la hora en formato HHMI
   }
   hr = generateTimeinHHMI(new Date())
@@ -25,8 +26,13 @@
     // Crea la base de hora para la que se estara haciendo la verificacion.
     return new Date(date.getFullYear(),date.getMonth(),date.getDate() + dayOffset,h,m)
   }
-  target = function (numberOfMachines){
-    var date = new Date()
+  
+  var shiftTarget = function(){
+    
+  }
+  
+  target = function (numberOfMachines, date){
+    var date = date || new Date()
     if(hr() > 630 && hr() < 1500){
       sod= createSOD(date,0,6,30);
       return normalizedTarget(sod, time, numberOfMachines * 11)
@@ -42,10 +48,10 @@
     }
   }
 
-  categories = ['1er Turno','2do Turno','3er Turno']
-  series = []
-  timeTargets = _.map([8.5,8,7.5], function(time){return time * .8});
-  numberOfMachines = _.values(data[1]);
+  var categories = ['1er Turno','2do Turno','3er Turno']
+  var series = []
+  var timeTargets = _.map([8.5,8,7.5], function(time){return time * .8});
+  var numberOfMachines = _.values(data[1]);
   series.push({
     colorByPoint:true,
     name: 'Piezas por turno',
