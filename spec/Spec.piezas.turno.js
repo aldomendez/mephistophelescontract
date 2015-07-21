@@ -138,3 +138,14 @@ describe('calculateTargetBasedOnShift', function(){
 		expect(calculateTargetBasedOnShift(3,new Date(2015,7,20,6,29))).toBe(329)
 	})
 })
+
+describe('getColor', function(){
+	it('should exists', function(){
+		expect(typeof getColor).toBe('function')
+	})
+	it('should return red or green based on actualValue and target', function(){
+		expect(getColor(1,2)).toBe('red')
+		expect(getColor(2,1)).toBe('green')
+		expect(getColor(2,2)).toBe('green')
+	})
+})

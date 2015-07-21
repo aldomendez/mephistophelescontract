@@ -60,7 +60,13 @@
       return deviceTarget[shift]
     }
   }
-  
+  var getColor = function getColor(actual, target){
+    if(actual >= target){
+      return 'green'
+    } else {
+      return 'red'
+    }
+  }
   var target = function (index, date){
     var shift = index + 1
     var date = date || new Date()
@@ -80,11 +86,7 @@
       }
     },
     colors:_.map(_.values(data[0]),function(actualVal, index){
-      if(target(4, index) < actualVal){
-        return 'green'
-      } else {
-        return 'red'
-      }
+      getColor(actualVal, target(4, index))
     }),
     data: _.map(_.values(data[0]),function(el){return +el})
   });
