@@ -82,13 +82,13 @@ describe('target', function(){
 	it('should be a function', function(){
 		expect( typeof target).toBe('function')
 	})
-	xit('should take the number of machines in consideration to calculate a target', function(){
-		var date = new Date(2015,7,20,6,45)
-		expect(typeof target(4,date)).toBe('number')
-		expect(target(4, new Date(2015,7,20,6,45))).toBe('number')
+	it('should take a date to calculate the shift and calculate the amount of devices processed', function(){
+		expect(typeof target(0, new Date(2015,7,20,21,56))).toBe('number')
+		expect(typeof target(0, new Date(2015,7,20,21,56))).toBe('number')
+		expect( target(1, new Date(2015,7,20,15,0)) ).toBe(0)
 	})
-	xit('should recognize the shift to calculate the target', function(){
-		expect(target(4, new Date(2015,7,20,6,45))).toBe('number')
+	it('should recognize the shift to calculate the target', function(){
+		expect(typeof target(0, new Date(2015,7,20,21,56))).toBe('number')
 	})
 })
 
@@ -111,7 +111,30 @@ describe('getShift', function(){
 	it('should return 3 if the date object between 23:00 and 6:30', function(){
 		expect(getShift(new Date(2015,7,20,22,45))).not.toBe(3)
 		expect(getShift(new Date(2015,7,20,23,0))).toBe(3)
-		expect(getShift(new Date(2015,7,20,3,25))).toBe(3)
 		expect(getShift(new Date(2015,7,20,6,30))).not.toBe(3)
+	})
+	it('should return 4 past midnight untill 6:30', function(){
+		expect(getShift(new Date(2015,7,20,23,45))).toBe(3)
+		expect(getShift(new Date(2015,7,20,3,25))).toBe(4)
+		expect(getShift(new Date(2015,7,20,6,25))).toBe(4)
+		expect(getShift(new Date(2015,7,20,6,35))).toBe(1)
+	})
+})
+
+describe('calculateTargetBasedOnShift', function(){
+	it('should return the target when is not the evaluated shift', function(){
+		expect(calculateTargetBasedOnShift(1,new Date(2015,7,20,17,59))).toBe(374)
+		expect(calculateTargetBasedOnShift(2,new Date(2015,7,20,23,59))).toBe(352)
+		expect(calculateTargetBasedOnShift(3,new Date(2015,7,20,12,5))).toBe(330)
+	})
+	it('should return the amount by hour (44)', function(){
+		expect(calculateTargetBasedOnShift(1,new Date(2015,7,20,7,30))).toBe(44)
+		expect(calculateTargetBasedOnShift(2,new Date(2015,7,20,16,0))).toBe(44)
+		expect(calculateTargetBasedOnShift(3,new Date(2015,7,20,0,0))).toBe(44)
+	})
+	it('should return the amount 1 minute less of the end of shift (depends of shift length)', function(){
+		expect(calculateTargetBasedOnShift(1,new Date(2015,7,20,14,59))).toBe(373)
+		expect(calculateTargetBasedOnShift(2,new Date(2015,7,20,22,59))).toBe(351)
+		expect(calculateTargetBasedOnShift(3,new Date(2015,7,20,6,29))).toBe(329)
 	})
 })

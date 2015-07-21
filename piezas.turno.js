@@ -37,25 +37,34 @@
     } else if (hr()>=2300){
       return 3
     } else if (hr() < 630){
-      return 3
+      return 4
     }
   }
   
-  target = function (numberOfMachines, index, date){
-    var date = date || new Date()
-    if(index == getShift(date)){
-      sod= createSOD(date,0,6,30);
-      return dateDiinHoursff(sod, time) * numberOfMachines * 11
-    } else if(index == getShift(date)){
-      sod= createSOD(date,0,15,0)
-      return dateDifinHoursf(sod, time) * numberOfMachines * 11
-    } else if (index == getShift(date)){
-      sod= createSOD(date,0,23,0)
-      return dateDiffinHours(sod, time) * numberOfMachines * 11
-    } else if (index == getShift(date)){
-      sod= createSOD(date,-1,23,0)
-      return dateDifinHoursf(sod, time) * numberOfMachines * 11
+  var calculateTargetBasedOnShift = function calculateTargetBasedOnShift(shift, date){
+    var currentShift = getShift(date)
+    var startOfDate = {
+      1:createSOD(date,0,6,30),
+      2:createSOD(date,0,15,0),
+      3:createSOD(date,0,23,0),
+      4:createSOD(date,-1,23,0)
     }
+    var deviceTarget = {
+      1:374,
+      2:352,
+      3:330
+    }
+    if (currentShift === shift || shift === 3 && currentShift === 4){
+      return Math.round(dateDiffinHours(startOfDate[currentShift],date) * 44)
+    } else {
+      return deviceTarget[shift]
+    }
+  }
+  
+  var target = function (index, date){
+    var shift = index + 1
+    var date = date || new Date()
+    return calculateTargetBasedOnShift(shift, date)
   }
 
   var categories = ['1er Turno','2do Turno','3er Turno']
