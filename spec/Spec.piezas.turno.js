@@ -17,22 +17,22 @@ describe('generateTimeinHHMI ', function(){
 		expect(typeof generateTimeinHHMI).toBe('function');
 		var hr = generateTimeinHHMI(new Date())
 		expect(typeof hr).toBe('function')
-		expect(hr()).toMatch(/\d{3,4}/)
+		expect(typeof hr()).toBe('number')
 	});
 	it('should throw if called with out arguments', function(){
 		expect(generateTimeinHHMI).toThrow()
 	})
-	it('closure should return a string when called', function(){
+	it('closure should return a number when called', function(){
 		hr = generateTimeinHHMI(new Date(1437428950496))
-		expect(hr()).toBe('1649')
-		expect(typeof hr()).toBe('string')
+		expect(hr()).toBe(1649)
+		expect(typeof hr()).toBe('number')
 		
 	})
 	it('should accept a UNIX timestamp as a first parameter', function(){
 		var time = new Date(1437428950496)
 		hr = generateTimeinHHMI(time)
-		expect(hr()).toBe('1649')
-		expect(typeof hr()).toBe('string')
+		expect(hr()).toBe(1649)
+		expect(typeof hr()).toBe('number')
 	})
 });
 

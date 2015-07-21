@@ -2,7 +2,7 @@
   // console.table(data);
   window.data = [{"SFT1":"301","SFT2":"41","SFT3":"0"},{"SFT1":"4","SFT2":"4","SFT3":"0"}];
 
-  pad = function(data){
+  var pad = function(data){
     return data < 10 ? '0' + data : '' + data
   }
   var time = new Date();
@@ -13,7 +13,7 @@
     }
     var ans = time.getHours() + pad(time.getMinutes()) 
     return function(){
-      return ans
+      return +ans
     } // regresa la hora en formato HHMI
   }
   var hr = generateTimeinHHMI(new Date())
@@ -21,7 +21,7 @@
   var dateDiffinHours = function(start,end){
     return ((end - start)/1000/60/60);
   }
-  createSOD = function(date, dayOffset, h, m){
+  var createSOD = function(date, dayOffset, h, m){
     // SOD = start of day;
     // Crea la base de hora para la que se estara haciendo la verificacion.
     return new Date(date.getFullYear(),date.getMonth(),date.getDate() + dayOffset,h,m)
