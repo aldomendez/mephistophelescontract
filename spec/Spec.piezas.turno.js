@@ -36,19 +36,19 @@ describe('generateTimeinHHMI ', function(){
 	})
 });
 
-describe('normalizedTarget', function(){
+describe('dateDiffinHours', function(){
 	it('should be a function', function(){
-		expect(typeof normalizedTarget).toBe('function')
+		expect(typeof dateDiffinHours).toBe('function')
 	})
-	it('should take two dates and an increment and return a number', function(){
+	it('generates a number', function(){
 		var start = new Date(2015,7,20,15,0,0);
 		var end = new Date(2015,7,20,18,8,25);
-		expect( typeof normalizedTarget(start, end, 11) ).toBe('number')
+		expect( typeof dateDiffinHours(start, end) ).toBe('number')
 	})
-	xit('should correctly calculates target of devices', function(){
+	it('should calculate correctly the hours between 2 dates', function(){
 		var start = new Date(2015,7,20,15,0,0);
-		var end = new Date(2015,7,20,18,8,25);
-		expect( normalizedTarget(start, end, 4*11) ).toBe(0)
+		var end = new Date(2015,7,20,18,0,0);
+		expect( dateDiffinHours(start, end, 44) ).toBe(3)
 	})
 });
 
@@ -61,11 +61,6 @@ describe('createSOD', function(){
 		expect( date.getHours() ).toEqual(6)
 		expect( date.getMinutes() ).toEqual(30)
 		
-		date = createSOD(new Date(2015,7,20), -1, 15,0)
-		expect( date.getDate() ).toEqual(19)
-		expect( date.getHours() ).toEqual(15)
-		expect( date.getMinutes() ).toEqual(0)
-		
 		date = createSOD(new Date(2015,4,7), 0, 6,30)
 		expect( date.getFullYear() ).toEqual(2015)
 		expect( date.getMonth() ).toEqual(4)
@@ -73,17 +68,50 @@ describe('createSOD', function(){
 		expect( date.getHours() ).toEqual(6)
 		expect( date.getMinutes() ).toEqual(30)
 	})
+	it('calculates dates correctly with the offset to less 5 day', function(){
+		date = createSOD(new Date(2015,7,20), -5, 15,0)
+		expect( date.getDate() ).toEqual(15)
+	})
+	it('calculates dates correctly with the offset to plus 5 day', function(){
+		date = createSOD(new Date(2015,7,20), 5, 15,0)
+		expect( date.getDate() ).toEqual(25)
+	})
 })
 
 describe('target', function(){
 	it('should be a function', function(){
 		expect( typeof target).toBe('function')
 	})
-	it('should take the number of machines in consideration to calculate a target', function(){
-		expect(typeof target(4,new Date(2015,7,20,6,45))).toBe('number')
+	xit('should take the number of machines in consideration to calculate a target', function(){
+		var date = new Date(2015,7,20,6,45)
+		expect(typeof target(4,date)).toBe('number')
 		expect(target(4, new Date(2015,7,20,6,45))).toBe('number')
 	})
-	it('should recognize the shift to calculate the target', function(){
+	xit('should recognize the shift to calculate the target', function(){
 		expect(target(4, new Date(2015,7,20,6,45))).toBe('number')
+	})
+})
+
+describe('getShift', function(){
+	it('should be a function', function(){
+		expect( typeof getShift).toBe('function')
+	})
+	it('should return 1 if the date object between 6:30 and 15:00', function(){
+		expect(getShift(new Date(2015,7,20,6,25))).not.toBe(1)
+		expect(getShift(new Date(2015,7,20,6,30))).toBe(1)
+		expect(getShift(new Date(2015,7,20,11,45))).toBe(1)
+		expect(getShift(new Date(2015,7,20,15,1))).not.toBe(1)
+	})
+	it('should return 2 if the date object between 15:00 and 23:00', function(){
+		expect(getShift(new Date(2015,7,20,12,0))).not.toBe(2)
+		expect(getShift(new Date(2015,7,20,15,0))).toBe(2)
+		expect(getShift(new Date(2015,7,20,21,45))).toBe(2)
+		expect(getShift(new Date(2015,7,20,23,1))).not.toBe(2)
+	})
+	it('should return 3 if the date object between 23:00 and 6:30', function(){
+		expect(getShift(new Date(2015,7,20,22,45))).not.toBe(3)
+		expect(getShift(new Date(2015,7,20,23,0))).toBe(3)
+		expect(getShift(new Date(2015,7,20,3,25))).toBe(3)
+		expect(getShift(new Date(2015,7,20,6,30))).not.toBe(3)
 	})
 })

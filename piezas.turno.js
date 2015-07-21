@@ -16,10 +16,10 @@
       return ans
     } // regresa la hora en formato HHMI
   }
-  hr = generateTimeinHHMI(new Date())
+  var hr = generateTimeinHHMI(new Date())
     
-  var normalizedTarget = function(start,end,inc){
-    return Math.round(((end - start)/1000/60/60) * inc);
+  var dateDiffinHours = function(start,end){
+    return ((end - start)/1000/60/60);
   }
   createSOD = function(date, dayOffset, h, m){
     // SOD = start of day;
@@ -27,24 +27,34 @@
     return new Date(date.getFullYear(),date.getMonth(),date.getDate() + dayOffset,h,m)
   }
   
-  var shiftTarget = function(){
+  var getShift = function(date){
+    var hr = generateTimeinHHMI(date)
     
+    if(hr() >= 630 && hr() < 1500){
+      return 1
+    } else if(hr() >= 1500 && hr()<2300){
+      return 2
+    } else if (hr()>=2300){
+      return 3
+    } else if (hr() < 630){
+      return 3
+    }
   }
   
-  target = function (numberOfMachines, date){
+  target = function (numberOfMachines, index, date){
     var date = date || new Date()
-    if(hr() > 630 && hr() < 1500){
+    if(index == getShift(date)){
       sod= createSOD(date,0,6,30);
-      return normalizedTarget(sod, time, numberOfMachines * 11)
-    } else if(hr()>1500 && hr()<2300){
+      return dateDiinHoursff(sod, time) * numberOfMachines * 11
+    } else if(index == getShift(date)){
       sod= createSOD(date,0,15,0)
-      return normalizedTarget(sod, time, numberOfMachines * 11)
-    } else if (hr()>2300){
+      return dateDifinHoursf(sod, time) * numberOfMachines * 11
+    } else if (index == getShift(date)){
       sod= createSOD(date,0,23,0)
-      return normalizedTarget(sod, time, numberOfMachines * 11)
-    } else if (hr() < 630){
+      return dateDiffinHours(sod, time) * numberOfMachines * 11
+    } else if (index == getShift(date)){
       sod= createSOD(date,-1,23,0)
-      return normalizedTarget(sod, time, numberOfMachines * 11)
+      return dateDifinHoursf(sod, time) * numberOfMachines * 11
     }
   }
 
@@ -61,7 +71,7 @@
       }
     },
     colors:_.map(_.values(data[0]),function(actualVal, index){
-      if(target(4) < actualVal){
+      if(target(4, index) < actualVal){
         return 'green'
       } else {
         return 'red'
