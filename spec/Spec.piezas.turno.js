@@ -149,3 +149,19 @@ describe('getColor', function(){
 		expect(getColor(2,2)).toBe('green')
 	})
 })
+
+describe('colors object', function(){
+	it('should be an object', function(){
+		expect(_.values(data[0])).toEqual([ '301', '41', '0' ])
+		colors = _.map(_.values(data[0]),function(actualVal, index){
+	      getColor(actualVal, target(2, new Date()))
+	    })
+		expect(typeof colors).toBe('object')
+	})
+	it('should contain colors', function(){
+		var colors = _.map(_.values(data[0]),function(actualVal, index){
+	      return getColor(actualVal, target(0, new Date(2015,7,21,20,16)))
+	    })
+		expect(colors).toEqual( [ 'red', 'red', 'red' ] )
+	})
+})

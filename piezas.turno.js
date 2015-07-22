@@ -86,7 +86,7 @@
       }
     },
     colors:_.map(_.values(data[0]),function(actualVal, index){
-      getColor(actualVal, target(4, index))
+      getColor(actualVal, target(index, new Date()))
     }),
     data: _.map(_.values(data[0]),function(el){return +el})
   });
