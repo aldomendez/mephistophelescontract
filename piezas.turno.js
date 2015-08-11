@@ -1,8 +1,8 @@
-dt = (function(data) {
-    if(data == null){
-      window.data = [{"SFT1":"301","SFT2":"41","SFT3":"0"},{"SFT1":"4","SFT2":"4","SFT3":"0"}];
+var dt = (function(data) {
+    if(typeof data === "undefined" || data === null){
+      data = [{"SFT1":"301","SFT2":"41","SFT3":"0"},{"SFT1":"4","SFT2":"4","SFT3":"0"}];
     } else {
-      window.data = data;
+      data = data;
     }
     var pad = function(data){
       return data < 10 ? '0' + data : '' + data
@@ -52,9 +52,9 @@ dt = (function(data) {
         4:createSOD(date,-1,23,0)
       }
       var deviceTarget = {
-        1:374,
-        2:352,
-        3:330
+        1:299,
+        2:282,
+        3:264
       }
       if (currentShift === shift || shift === 3 && currentShift === 4){
         return Math.round(dateDiffinHours(startOfDate[currentShift],date) * 44)

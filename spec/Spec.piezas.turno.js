@@ -154,7 +154,7 @@ describe('colors object', function(){
 	it('should be an object', function(){
 		expect(_.values(data[0])).toEqual([ '301', '41', '0' ])
 		colors = _.map(_.values(data[0]),function(actualVal, index){
-	      getColor(actualVal, target(2, new Date()))
+	      return getColor(actualVal, target(2, new Date()))
 	    })
 		expect(typeof colors).toBe('object')
 	})

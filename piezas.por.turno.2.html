@@ -14,9 +14,9 @@
   $(function () {
 
     req = $.getJSON('bonders.php/piezas');
-
+    
     req.done(function (data){
-      
+    data = [{"SFT1":"299","SFT2":"41","SFT3":"0"},{"SFT1":"4","SFT2":"4","SFT3":"0"}];  
 	  series = dt(data);
 	  console.log(series)
       $('#container').highcharts({
